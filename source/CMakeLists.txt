@@ -20,7 +20,8 @@ add_library(qtmosquitto SHARED
   "${QTMOSQUITTO_MOC}"
 )
 
-target_link_libraries(qtmosquitto Qt5::Core "${MOSQUITTO_LIB}")
+qt5_use_modules(qtmosquitto Core)
+target_link_libraries(qtmosquitto "${MOSQUITTO_LIB}")
 
 
 add_subdirectory(demo)

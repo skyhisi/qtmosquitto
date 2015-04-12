@@ -12,5 +12,5 @@ add_executable(qtmosquitto-demo
   window.hpp
   "${DEMO_MOC}"
 )
-
-target_link_libraries(qtmosquitto-demo qtmosquitto Qt5::Core Qt5::Widgets)
+qt5_use_modules(qtmosquitto-demo Core Widgets)
+target_link_libraries(qtmosquitto-demo qtmosquitto)
