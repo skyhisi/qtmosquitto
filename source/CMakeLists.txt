@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.0)
 
-find_package(Qt5 5.0 COMPONENTS Core)
+find_package(Qt5Core)
 
 find_library(MOSQUITTO_LIB mosquitto
   HINTS "$ENV{MOSQUITTO_DIR}/devel"

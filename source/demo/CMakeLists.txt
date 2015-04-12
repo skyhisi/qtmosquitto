@@ -1,6 +1,7 @@
 cmake_minimum_required(VERSION 3.0)
 
-find_package(Qt5 5.0 COMPONENTS Core Widgets)
+find_package(Qt5Core)
+find_package(Qt5Widgets)
 
 
 qt5_wrap_cpp(DEMO_MOC window.hpp)
