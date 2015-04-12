@@ -13,5 +13,5 @@ install:
   
 script:
   - cd build
-  - cmake -D CMAKE_BUILD_TYPE=Debug ..\source
+  - cmake -D CMAKE_BUILD_TYPE=Debug ../source
   - make
