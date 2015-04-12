@@ -3,7 +3,7 @@ compiler:
   - gcc
 
 install:
-  - sudo apt-add-repository ppa:ubuntu-sdk-team/ppa
+  - sudo apt-add-repository -y ppa:ubuntu-sdk-team/ppa
   - sudo apt-get update -qq
   - sudo apt-get install -qq qt5-default qtbase5-dev qtbase5-dev-tools
   - wget http://www.cmake.org/files/v3.2/cmake-3.2.1-Linux-x86_64.sh
