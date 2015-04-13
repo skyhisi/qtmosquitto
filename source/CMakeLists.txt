@@ -1,5 +1,6 @@
 cmake_minimum_required(VERSION 3.0)
 
+set(CMAKE_AUTOMOC ON)
 find_package(Qt5Core)
 
 find_library(MOSQUITTO_LIB mosquitto
@@ -12,12 +13,9 @@ find_path(MOSQUITTO_INC mosquitto.h
 
 include_directories("${MOSQUITTO_INC}")
 
-qt5_wrap_cpp(QTMOSQUITTO_MOC qtmosquitto.hpp)
-
 add_library(qtmosquitto SHARED
   qtmosquitto.hpp
   qtmosquitto.cpp
-  "${QTMOSQUITTO_MOC}"
 )
 
 qt5_use_modules(qtmosquitto Core)
