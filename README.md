@@ -5,7 +5,7 @@ Wrapper of the [Mosquitto](http://mosquitto.org/) library for [Qt](http://www.qt
 
 ## Building on Linux
     cd build
-    cmake -D CMAKE_BUILD_TYPE=Debug ..\source
+    cmake -D CMAKE_BUILD_TYPE=Debug -D QTDIR=/your_home/Qt/5.x/gcc_64/lib/cmake ..\source
     make
     gui/qtmosquitto-demo
 

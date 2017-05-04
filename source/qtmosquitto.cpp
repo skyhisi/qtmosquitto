@@ -103,6 +103,38 @@ bool QtMosquittoClient::doConnect(const QString& host, int port, int keepalive)
   return true;
 }
 
+bool QtMosquittoClient::doConnect(const QString &cafile, const QString &certfile, const QString &keyfile, const QString &host, int port, int keepalive)
+{
+    if (d->connected)
+    {
+      qWarning() << "QtMosquittoClient::doConnect: Already connected";
+      return false;
+    }
+
+    // Set TLS before connecting
+    QByteArray cafileBA(cafile.toUtf8());
+    QByteArray certfileBA(certfile.toUtf8());
+    QByteArray keyfileBA(keyfile.toUtf8());
+    int rt = mosquitto_tls_set(d->mosq, cafileBA.data(), NULL, certfileBA.data(), keyfileBA.data(), 0);
+    if (!(rt == MOSQ_ERR_SUCCESS))
+    {
+      qWarning() << "QtMosquittoClient::doConnect: Failed to set TLS" << rt;
+      return false;
+    }
+
+    // Connect
+    QByteArray hostBA(host.toUtf8());
+    int rc = mosquitto_connect(d->mosq, hostBA.data(), port, keepalive);
+    if (!(rc == MOSQ_ERR_SUCCESS || rc == MOSQ_ERR_CONN_PENDING))
+    {
+      qWarning() << "QtMosquittoClient::doConnect: Failed to connect" << rc;
+      return false;
+    }
+
+    d->connected = true;
+    return true;
+}
+
 bool QtMosquittoClient::doReconnect()
 {
   if (d->connected)

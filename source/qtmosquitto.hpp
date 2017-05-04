@@ -92,7 +92,21 @@ class QTMOSQUITTO_EXPORT QtMosquittoClient : public QObject
      * \sa connected, disconnected, connectState, error
      */
     bool doConnect(const QString& host, int port = 1883, int keepalive = 60);
-    
+
+    /** Start connecting to the server.
+     * Start connecting to the server, the connection will not have completed
+     * before the call returns.
+     * \param cafile     Path to a file containing the PEM encoded trusted CA certificate files.
+     * \param certfile   Path to a file containing the PEM encoded certificate file for this client.
+     * \param keyfile    Path to a file containing the PEM encoded private key for this client.
+     * \param host       Host name or IP address of server.
+     * \param port       Port on server running MQTT service.
+     * \param keepalive  Interval between ping messages.
+     * \returns True if connection is starting, false otherwise.
+     * \sa connected, disconnected, connectState, error
+     */
+    bool doConnect(const QString& cafile, const QString& certfile, const QString& keyfile, const QString& host, int port = 1883, int keepalive = 60);
+
     /** Publish a message to the server.
      * \param topic     Topic of message, e.g a/b/c
      * \param payload   Payload of message as string.
