@@ -4,14 +4,15 @@ Copyright (c) 2015 Silas Parker <skyhisi@gmail.com>
 All rights reserved. This program and the accompanying materials
 are made available under the terms of the Eclipse Public License v1.0
 and Eclipse Distribution License v1.0 which accompany this distribution.
- 
+
 The Eclipse Public License is available at
    http://www.eclipse.org/legal/epl-v10.html
 and the Eclipse Distribution License is available at
   http://www.eclipse.org/org/documents/edl-v10.php.
- 
+
 Contributors:
    Silas Parker
+   Marco Pellin
 */
 
 #include "qtmosquitto.hpp"
@@ -36,7 +37,7 @@ struct QtMosquittoClient::data
   bool autoreconnect;
   bool connected;
   QTimer processTimer;
-  
+
   data():mosq(0),autoreconnect(false),connected(false),processTimer(){}
 };
 
@@ -49,18 +50,18 @@ QtMosquittoClient::QtMosquittoClient(const QString& id, bool clean_session, QObj
   const char* idCC = (idBA.size() != 0) ? idBA.data() : 0;
   d->mosq = mosquitto_new(idCC, clean_session, this);
   Q_ASSERT(d->mosq);
-  
+
   d->processTimer.setTimerType(Qt::CoarseTimer);
   d->processTimer.setSingleShot(false);
   d->processTimer.setInterval(100);
   connect(&d->processTimer, SIGNAL(timeout()), this, SLOT(process()));
   d->processTimer.start();
-  
+
   mosquitto_connect_callback_set(d->mosq, &QtMosquittoClient::connect_cb_s);
   mosquitto_disconnect_callback_set(d->mosq, &QtMosquittoClient::disconnect_cb_s);
   mosquitto_log_callback_set(d->mosq, &QtMosquittoClient::log_cb_s);
   mosquitto_message_callback_set(d->mosq, &QtMosquittoClient::message_cb_s);
-  
+
 }
 
 QtMosquittoClient::~QtMosquittoClient()
@@ -84,6 +85,28 @@ void QtMosquittoClient::setUsernamePassword(const QString& username, const QStri
   Q_ASSERT(rc == MOSQ_ERR_SUCCESS);
 }
 
+bool QtMosquittoClient::configureTLS(const QString &cafile, const QString &certfile, const QString &keyfile)
+{
+    if (d->connected)
+    {
+      qWarning() << "QtMosquittoClient::configureTLS: Already connected";
+      return false;
+    }
+
+    // Set TLS before connecting
+    QByteArray cafileBA(cafile.toUtf8());
+    QByteArray certfileBA(certfile.toUtf8());
+    QByteArray keyfileBA(keyfile.toUtf8());
+    int rc = mosquitto_tls_set(d->mosq, cafileBA.data(), NULL, certfileBA.data(), keyfileBA.data(), 0);
+    if (!(rc == MOSQ_ERR_SUCCESS))
+    {
+      qWarning() << "QtMosquittoClient::doConnect: Failed to set TLS" << rc;
+      return false;
+    }
+
+    return true;
+}
+
 bool QtMosquittoClient::doConnect(const QString& host, int port, int keepalive)
 {
   if (d->connected)
@@ -91,7 +114,7 @@ bool QtMosquittoClient::doConnect(const QString& host, int port, int keepalive)
     qWarning() << "QtMosquittoClient::doConnect: Already connected";
     return false;
   }
-  
+
   QByteArray hostBA(host.toUtf8());
   int rc = mosquitto_connect(d->mosq, hostBA.data(), port, keepalive);
   if (!(rc == MOSQ_ERR_SUCCESS || rc == MOSQ_ERR_CONN_PENDING))
@@ -103,38 +126,6 @@ bool QtMosquittoClient::doConnect(const QString& host, int port, int keepalive)
   return true;
 }
 
-bool QtMosquittoClient::doConnect(const QString &cafile, const QString &certfile, const QString &keyfile, const QString &host, int port, int keepalive)
-{
-    if (d->connected)
-    {
-      qWarning() << "QtMosquittoClient::doConnect: Already connected";
-      return false;
-    }
-
-    // Set TLS before connecting
-    QByteArray cafileBA(cafile.toUtf8());
-    QByteArray certfileBA(certfile.toUtf8());
-    QByteArray keyfileBA(keyfile.toUtf8());
-    int rt = mosquitto_tls_set(d->mosq, cafileBA.data(), NULL, certfileBA.data(), keyfileBA.data(), 0);
-    if (!(rt == MOSQ_ERR_SUCCESS))
-    {
-      qWarning() << "QtMosquittoClient::doConnect: Failed to set TLS" << rt;
-      return false;
-    }
-
-    // Connect
-    QByteArray hostBA(host.toUtf8());
-    int rc = mosquitto_connect(d->mosq, hostBA.data(), port, keepalive);
-    if (!(rc == MOSQ_ERR_SUCCESS || rc == MOSQ_ERR_CONN_PENDING))
-    {
-      qWarning() << "QtMosquittoClient::doConnect: Failed to connect" << rc;
-      return false;
-    }
-
-    d->connected = true;
-    return true;
-}
-
 bool QtMosquittoClient::doReconnect()
 {
   if (d->connected)
@@ -142,7 +133,7 @@ bool QtMosquittoClient::doReconnect()
     qWarning() << "QtMosquittoClient::doReconnect: Already connected";
     return false;
   }
-  
+
   int rc = mosquitto_reconnect(d->mosq);
   if (!(rc == MOSQ_ERR_SUCCESS || rc == MOSQ_ERR_CONN_PENDING))
   {
