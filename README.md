@@ -5,13 +5,19 @@ Wrapper of the [Mosquitto](http://mosquitto.org/) library for [Qt](http://www.qt
 
 ## Building on Linux
     cd build
+    cmake -D CMAKE_BUILD_TYPE=Debug ..\source
+    make
+    gui/qtmosquitto-demo
+
+## Building on Linux with different QTDIR
+    cd build
     cmake -D CMAKE_BUILD_TYPE=Debug -D QTDIR=/your_home/Qt/5.x/gcc_64/lib/cmake ..\source
     make
     gui/qtmosquitto-demo
 
 ## Building on Windows
-	"c:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\vcvarsall.bat"
-	set PATH=C:\Qt\5.4\msvc2013\bin;%PATH%
+        "c:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\vcvarsall.bat"
+        set PATH=C:\Qt\5.4\msvc2013\bin;%PATH%
     cd build
     cmake -G "NMake Makefiles" -D CMAKE_BUILD_TYPE=Debug ..\source
     nmake
