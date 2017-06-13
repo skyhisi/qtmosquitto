@@ -18,13 +18,12 @@ Wrapper of the [Mosquitto](http://mosquitto.org/) library for [Qt](http://www.qt
     gui/qtmosquitto-demo
 
 ## Building with qmake
-    cd build
     qmake qtmosquitto.pro
     make
 
 ## Installing the libray
-    cp libqtmosquitto.so /usr/lib/
-    cp ../source/qtmosquitto.hpp /usr/include/
+    cp build/lib/libqtmosquitto.so* /usr/lib/
+    cp source/qtmosquitto.hpp /usr/include/
 
 ## Using the library in a Qt Project
     Include the header file:
