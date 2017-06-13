@@ -107,6 +107,40 @@ bool QtMosquittoClient::configureTLS(const QString &cafile, const QString &certf
     return true;
 }
 
+bool QtMosquittoClient::advancedOptionsTLS(int cert_reqs, const QString &tls_version, const QString &ciphers)
+{
+    /** Set advanced SSL/TLS options.
+     * Must be called before doConnect.
+     * \param cert_reqs     An integer defining the verification requirements the client will impose on the server.
+     *                      This can be one of:
+     *                      SSL_VERIFY_NONE (0): the server will not be verified in any way. Using SSL_VERIFY_NONE provides no security.
+     *                      SSL_VERIFY_PEER (1): the server certificate will be verified and the connection aborted if the verification fails.
+     *                      The default and recommended value is SSL_VERIFY_PEER.
+     * \param tls_version   The version of the SSL/TLS protocol to use as a string.  If NULL, the default value is used.
+     *                      The default value and the available values depend on the version of openssl that the library was compiled against.
+     * \param ciphers       A string describing the ciphers available for use.  See the “openssl ciphers” tool for more information.
+     *                      If NULL, the default ciphers will be used.
+     * \returns True if configuration was accepted, false otherwise.
+     */
+
+    if (d->connected)
+    {
+      qWarning() << "QtMosquittoClient::advancedOptionsTLS: Already connected";
+      return false;
+    }
+
+    QByteArray tls_versionBA(tls_version.toUtf8());
+    QByteArray ciphersBA(ciphers.toUtf8());
+    int rc = mosquitto_tls_opts_set(d->mosq, cert_reqs, tls_versionBA.data(), ciphersBA.data());
+    if (!(rc == MOSQ_ERR_SUCCESS))
+    {
+      qWarning() << "QtMosquittoClient::advancedOptionsTLS: Failed to set TLS options" << rc;
+      return false;
+    }
+
+    return true;
+}
+
 bool QtMosquittoClient::doConnect(const QString& host, int port, int keepalive)
 {
   if (d->connected)

@@ -95,6 +95,21 @@ class QTMOSQUITTO_EXPORT QtMosquittoClient : public QObject
      */
     bool configureTLS(const QString &cafile, const QString &certfile, const QString &keyfile);
 
+    /** Set advanced SSL/TLS options.
+     * Must be called before doConnect.
+     * \param cert_reqs     An integer defining the verification requirements the client will impose on the server.
+     *                      This can be one of:
+     *                      SSL_VERIFY_NONE (0): the server will not be verified in any way. Using SSL_VERIFY_NONE provides no security.
+     *                      SSL_VERIFY_PEER (1): the server certificate will be verified and the connection aborted if the verification fails.
+     *                      The default and recommended value is SSL_VERIFY_PEER.
+     * \param tls_version   The version of the SSL/TLS protocol to use as a string.  If NULL, the default value is used.
+     *                      The default value and the available values depend on the version of openssl that the library was compiled against.
+     * \param ciphers       A string describing the ciphers available for use.  See the “openssl ciphers” tool for more information.
+     *                      If NULL, the default ciphers will be used.
+     * \returns True if configuration was accepted, false otherwise.
+     */
+    bool advancedOptionsTLS(int cert_reqs, const QString &tls_version, const QString &ciphers);
+
     /** Start connecting to the server.
      * Start connecting to the server, the connection will not have completed
      * before the call returns.
@@ -138,7 +153,7 @@ class QTMOSQUITTO_EXPORT QtMosquittoClient : public QObject
      * \returns True if unsubscribe sent, false otherwise.
      */
     bool unsubscribe(const QString& topic);
-    
+
   public slots:
     /** Reconnect to a server when the client has been disconnected.
      * \returns True if connection is restarting, false otherwise.
