@@ -110,6 +110,12 @@ class QTMOSQUITTO_EXPORT QtMosquittoClient : public QObject
      */
     bool advancedOptionsTLS(int cert_reqs, const QString &tls_version, const QString &ciphers);
 
+    /** Set max_inflight_messages value.
+     * \param max_inflight_messages     The maximum number of inflight messages.  Defaults to 20.
+     * \returns True if configuration was accepted, false otherwise.
+     */
+    bool setMaxInflightMessages(int max_inflight_messages);
+
     /** Start connecting to the server.
      * Start connecting to the server, the connection will not have completed
      * before the call returns.
