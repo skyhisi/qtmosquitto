@@ -1,5 +1,9 @@
 cmake_minimum_required(VERSION 3.0)
 
+if (QTDIR)
+  list (APPEND CMAKE_PREFIX_PATH ${QTDIR})
+endif (QTDIR)
+
 set(CMAKE_AUTOMOC ON)
 find_package(Qt5Core)
 
