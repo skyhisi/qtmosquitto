@@ -1,7 +1,7 @@
 # QtMosquitto
 Wrapper of the [Mosquitto](http://mosquitto.org/) library for [Qt](http://www.qt.io/) 5
 
-[![Build Status](https://travis-ci.org/skyhisi/qtmosquitto.svg?branch=master)](https://travis-ci.org/skyhisi/qtmosquitto)
+[![Build Status](https://travis-ci.org/marcopellin/qtmosquitto.svg?branch=master)](https://travis-ci.org/marcopellin/qtmosquitto)
 
 # QtMosquitto on Linux
 
