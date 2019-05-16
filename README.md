@@ -1,7 +1,7 @@
 # QtMosquitto
 Wrapper of the [Mosquitto](http://mosquitto.org/) library for [Qt](http://www.qt.io/) 5
 
-[![Build Status](https://travis-ci.org/marcopellin/qtmosquitto.svg?branch=master)](https://travis-ci.org/marcopellin/qtmosquitto)
+[![Build Status](https://travis-ci.org/skyhisi/qtmosquitto.svg?branch=master)](https://travis-ci.org/skyhisi/qtmosquitto)
 
 # QtMosquitto on Linux
 
@@ -22,8 +22,8 @@ Wrapper of the [Mosquitto](http://mosquitto.org/) library for [Qt](http://www.qt
     make
 
 ## Installing the libray
-    cp build/lib/libqtmosquitto.so* /usr/lib/
-    cp source/qtmosquitto.hpp /usr/include/
+    cp build/lib/libqtmosquitto.so* /usr/local/lib/
+    cp source/qtmosquitto.hpp /usr/local/include/
 
 ## Using the library in a Qt Project
     Include the header file:
@@ -41,3 +41,4 @@ Wrapper of the [Mosquitto](http://mosquitto.org/) library for [Qt](http://www.qt
     cmake -G "NMake Makefiles" -D CMAKE_BUILD_TYPE=Debug ..\source
     nmake
     gui\qtmosquitto-demo.exe
+
